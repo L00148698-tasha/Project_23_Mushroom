@@ -77,15 +77,44 @@ print(filtered_data)
 
 nrow(filtered_data) #20491
 
+####UNIQUE
+
 # Use duplicated() to check for duplicates based on scientificName and coordinates to remove the same data point
 duplicated_rows_name_coord <- duplicated(filtered_data[, c("scientificName", "decimalLatitude", "decimalLongitude")])
 
 duplicated_rows_name_coord
-data_unique <- filtered_data[!duplicated(filtered_data[, c("scientificName", "decimalLatitude", "decimalLongitude")]), ] 
 
-nrow(data_unique)#10543
+data_unique <- filtered_data[!duplicated(filtered_data[, c("scientificName", "decimalLatitude", "decimalLongitude","month")]), ] 
 
+nrow(data_unique)#13989
 count(data_unique,species) 
+head(data_unique)
+
+library(dplyr)
+#remove unwanted columns
+# remove columns y and z
+data_unique <- dplyr::select(data_unique, -scientificName, -verbatimScientificName,-day)
+head(data_unique)
+# rename the columns
+unique_data <- data_unique %>%
+  rename(lat=decimalLatitude,lon=decimalLongitude)
+
+head(unique_data)
+
+#check for NA's 
+sum(is.na(unique_data))
+# Count the number of NA values
+num_na <- sum(is.na(unique_data))
+# Get the indices of the NA values
+# Subset the original data frame to show the NA values
+nas_rows <- unique_data[na_indices[,1], ]
+nas_rows
+
+#replace NA values with the mean
+unique_data$month[is.na(unique_data$month)]<-round(mean(unique_data$month, na.rm = TRUE))
+head(unique_data)
+
+sum(is.na(unique_data))
 
 write.csv(data_unique,"data_unique.csv")
 
@@ -131,4 +160,33 @@ plotMap
 
 ##definitetly a few outliers that will need to be removed but will achieved this when plotting against the land maps as they are more accurate
 getwd()
+
+library(dplyr)
+# remove columns y and z
+filtered_data <- dplyr::select(filtered_data, -scientificName, -verbatimScientificName , -day)
+
+# rename the columns
+filtered_data <- filtered_data %>%
+  rename(lat=decimalLatitude,lon=decimalLongitude)
+
+head(filtered_data)
+nrow(filtered_data)
+
+#check for NA's 
+sum(is.na(filtered_data))
+# Count the number of NA values
+num_na <- sum(is.na(filtered_data))
+# Get the indices of the NA values
+# Subset the original data frame to show the NA values
+nas_rows2 <- filtered_data[na_indices[,1], ]
+nas_rows2
+View(filtered_data)
+
+#replace NA values with the mean
+filtered_data$month[is.na(filtered_data$month)]<-round(mean(filtered_data$month, na.rm = TRUE))
+head(filtered_data)
+
+sum(is.na(filtered_data))
+
+head(filtered_data)
 write.csv(filtered_data,"filtered.csv")
