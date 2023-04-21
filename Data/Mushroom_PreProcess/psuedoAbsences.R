@@ -40,7 +40,8 @@ for (species_name in unique_species) {
 
 # Create an empty dataframe to store the resulting data
 result_df <- data.frame()
-
+head(presence_data)
+sum(is.na(presence_data))
 # Loop through each species name
 for (species_name in unique_species) {
   # Access individual data frames by species name
@@ -84,6 +85,9 @@ result_df <- result_df %>%
 # Print the resulting dataframe
 head(result_df)
 tail(result_df)
+#remove the day 
+# remove columns y and z
+result_df <- dplyr::select(result_df,-day)
 
 result_df_lat_lon<- result_df[c("lon", "lat")] 
 presence_data_lat_lon<- presence_data[c("lon", "lat")] 
@@ -101,5 +105,15 @@ presence_data <- presence_data %>%
 head(presence_data)
 #do not need the first column
 presence_data  <- presence_data[,-1]
+
+# bind the two dat frames together the present and absent
+pres_abs_data<- rbind(result_df, presence_data)
+head(pres_abs_data)
+tail(pres_abs_data)
+#View(pres_abs_data)
+summary(pres_abs_data)
+
+getwd
+write.csv(pres_abs_data, "pres_abs.csv")
 
 
