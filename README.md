@@ -2,5 +2,5 @@
 Machine Learning Research for Mushroom Habitat Suitability
 
 Steps in the process: 
-1: Uploas the occurrence data
+1: Upload the occurrence data
 
