@@ -1,7 +1,7 @@
 getwd()
 setwd("E:/Project_23_Mushroom_git/Mushroom_Suitability_Research/Project_23_Mushroom/Data/Mushroom_data")
 mushroom_occurrences<- read.csv("pres_abs.csv")
-setwd("E:/Project_23_Mushroom_git/Mushroom_Suitability_Research/Project_23_Mushroom/Data/Climate_Data/temperature_avg")
+setwd("E:/Project_23_Mushroom_git/Mushroom_Suitability_Research/Project_23_Mushroom/Data/Climate_Data/precipitation_avg")
 
 library(terra)
 library(dplyr)
@@ -13,7 +13,7 @@ nrow(mushroom_occurrences)
 mushroom_occurrences  <- mushroom_occurrences[,-1]
 
 # Set the variable and months of interest
-variable <- "tavg"
+variable <- "prec"
 months <- sprintf("%02d", 1:12)
 
 # Set the bounding box for the area of interest
@@ -30,40 +30,38 @@ for (month in months) {
 r_list
 
 # Stack the data for all 12 months
-tavg_data <- rast(r_list)
-tavg_data
+prec_data <- rast(r_list)
+prec_data
 
 # Extract tavg values for each observation point
-tavg_values <- extract(tavg_data, mushroom_occurrences[, c("lon", "lat")])
-View(tavg_values)
+prec_values <- extract(prec_data, mushroom_occurrences[, c("lon", "lat")])
+View(prec_values)
 #do not need the first column
-tavg_values  <- tavg_values[,-1]
+prec_values  <- prec_values[,-1]
 
-View(tavg_values)
+View(prec_values)
 # Get layer index for each occurrence point
 layer_index <- as.numeric(mushroom_occurrences$month)
 print(layer_index[2])
 
 # Create data frame with tavg and occurrence data
-tavg_occurrence <- data.frame(
+prec_occurrence <- data.frame(
   species = mushroom_occurrences$species,
   month = mushroom_occurrences$month,
   year = mushroom_occurrences$year,
   lat = mushroom_occurrences$lat,
   lon = mushroom_occurrences$lon,
   present = mushroom_occurrences$present,
-  tavg = tavg_values[cbind(1:nrow(tavg_values), layer_index)]
+  prec = prec_values[cbind(1:nrow(prec_values), layer_index)]
 )
-head(tavg_occurrence)
+head(prec_occurrence)
 
 # Check for NaN values
-sum(is.na(tavg_occurrence))#439
+sum(is.na(prec_occurrence))#439
 
-summary(tavg_occurrence)
+summary(prec_occurrence)
 
 #I suspect these values are values that are not on land. I will until I add the other predictors and then remove
 
 getwd()
-write.csv(tavg_occurrence,"tavg.csv")
-
-
+write.csv(prec_occurrence,"prec.csv")
