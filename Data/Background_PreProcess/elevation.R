@@ -36,5 +36,6 @@ elev_occurrence <- data.frame(
   elev = elev_values
 )
 head(elev_occurrence)
-
+setwd("E:/Project_23_Mushroom_git/Mushroom_Suitability_Research/Project_23_Mushroom/Data/Background_Data/Elevation")
 write.csv(elev_occurrence, "elev.csv")
+writeRaster(elev,"elev.tif")
