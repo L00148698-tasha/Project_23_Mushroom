@@ -96,25 +96,21 @@ library(dplyr)
 data_unique <- dplyr::select(data_unique, -scientificName, -verbatimScientificName,-day)
 head(data_unique)
 # rename the columns
-unique_data <- data_unique %>%
+data_unique <- data_unique %>%
   rename(lat=decimalLatitude,lon=decimalLongitude)
 
-head(unique_data)
+head(data_unique)
 
 #check for NA's 
-sum(is.na(unique_data))
+sum(is.na(data_unique))
 # Count the number of NA values
-num_na <- sum(is.na(unique_data))
-# Get the indices of the NA values
-# Subset the original data frame to show the NA values
-nas_rows <- unique_data[na_indices[,1], ]
-nas_rows
+num_na <- sum(is.na(data_unique))
 
 #replace NA values with the mean
-unique_data$month[is.na(unique_data$month)]<-round(mean(unique_data$month, na.rm = TRUE))
-head(unique_data)
+data_unique$month[is.na(data_unique$month)]<-round(mean(data_unique$month, na.rm = TRUE))
+head(data_unique)
 
-sum(is.na(unique_data))
+sum(is.na(data_unique))
 
 write.csv(data_unique,"data_unique.csv")
 
