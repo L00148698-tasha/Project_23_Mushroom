@@ -1,49 +1,52 @@
 library(terra)
 setwd("E:/Project_23_Mushroom_git/Mushroom_Suitability_Research/Project_23_Mushroom/Data/Background_Data/Bare")
-bare<-rast("bare.tif")
+bare<-read.csv("bare.csv")
 
 setwd("E:/Project_23_Mushroom_git/Mushroom_Suitability_Research/Project_23_Mushroom/Data/Background_Data/Cropland")
-cropland<-rast("cropland.tif")
+cropland<-read.csv("cropland.csv")
 
 setwd("E:/Project_23_Mushroom_git/Mushroom_Suitability_Research/Project_23_Mushroom/Data/Background_Data/Elevation")
-elev<-rast("elev.tif")
+elev<-read.csv("elev.csv")
 
 setwd("E:/Project_23_Mushroom_git/Mushroom_Suitability_Research/Project_23_Mushroom/Data/Background_Data/Grass")
-grass<-rast("grass.tif")
+grass<-read.csv("grass.csv")
 
 setwd("E:/Project_23_Mushroom_git/Mushroom_Suitability_Research/Project_23_Mushroom/Data/Background_Data/Tree")
-tree<-rast("trees.tif")
+tree<-read.csv("tree.csv")
 
 setwd("E:/Project_23_Mushroom_git/Mushroom_Suitability_Research/Project_23_Mushroom/Data/Background_Data/Wetland")
-wetland<-rast("wetland.tif")
+wetland<-read.csv("wetland.csv")
 
 setwd("E:/Project_23_Mushroom_git/Mushroom_Suitability_Research/Project_23_Mushroom/Data/Climate_Data/precipitation_avg")
-prec<-rast("wc2.1_30s_prec_01.tif")
-
-# change the extent
-#check the coordinate reference system
-crs(prec)
-
-#use variables to set the extent
-ext <-ext(-14,4,49,61.3)
-prec<-crop(prec,ext)
-plot(prec)
+prec<-read.csv("prec.csv")
 
 setwd("E:/Project_23_Mushroom_git/Mushroom_Suitability_Research/Project_23_Mushroom/Data/Climate_Data/temperature_avg")
-tavg<-rast("wc2.1_30s_tavg_01.tif")
-tavg<-crop(tavg,ext)
-plot(tavg)
+tavg<-read.csv("tavg.csv")
+
+setwd("E:/Project_23_Mushroom_git/Mushroom_Suitability_Research/Project_23_Mushroom/Data/Climate_Data/solar_radiation")
+srad<-read.csv("srad.csv")
+
+setwd("E:/Project_23_Mushroom_git/Mushroom_Suitability_Research/Project_23_Mushroom/Data/Climate_Data/water_vapor_pressure")
+vapr<-read.csv("vapr.csv")
 
 
-predictors<-c(bare,cropland,elev,grass,prec,tavg,tree,wetland)
-summary(predictors)
-
-# Define new names        lat        lon tavg prec elev  trees  grass present
-new_names <- c("bare","cropland","elev","grass","prec","tavg","tree","wetland")
-# Change the names in the raster stack
-names(predictors) <- new_names
-plot(predictors)
+# Create data frame with all data
+occ_pred <- data.frame(
+  tavg,
+  prec =prec$prec,
+  srad =srad$srad,
+  vapr=vapr$vapr,
+  bare = bare$bare,
+  tree = tree$tree,
+  grass = grass$grass,
+  cropland = cropland$cropland,
+  elev = elev$elev,
+  wetland =wetland$wetland
+)
+head(occ_pred)
+#do not need the first column
+occ_pred  <- occ_pred[,-1]
 
 getwd()
 setwd("E:/Project_23_Mushroom_git/Mushroom_Suitability_Research/Project_23_Mushroom/Data/Background_Data/")
-writeRaster(predictors,"predictors.tif")
+write.csv(occ_pred,"occ_pred.csv")
