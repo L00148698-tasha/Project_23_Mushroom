@@ -23,15 +23,15 @@ unique(alldata$species)
 #[5] "Coprinus comatus"           "Calocybe gambosa"           "Craterellus tubaeformis"    "Cantharellus cibarius" 
 #split the species to bolet
 # Specify the desired species name
-target_species <- "Calvatia gigantea"
+target_species <- "Coprinus comatus"
 
 # Create a new data frame with only the rows for the target species
-calvatia_gi <- alldata[alldata$species == target_species, ]
+coprinus_com <- alldata[alldata$species == target_species, ]
 
 #split the data
 
-present <- calvatia_gi[calvatia_gi$present == 1, ]
-absent<-calvatia_gi[calvatia_gi$present == 0, ]
+present <- coprinus_com[coprinus_com$present == 1, ]
+absent<-coprinus_com[coprinus_com$present == 0, ]
 
 nrow(present)
 nrow(absent)
@@ -53,10 +53,10 @@ head(absvals)
 absvals <- absvals[,-1]
 sdmdata <- data.frame(cbind(pb, rbind(presvals, absvals)))
 
-plot(predictors[[1]])
-library(geodata)
-wrld <- world(path=".")
-lines(wrld)
+#plot(predictors[[1]])
+#library(geodata)
+#wrld <- world(path=".")
+#lines(wrld)
 
 
 #split the present data
@@ -98,10 +98,19 @@ rf1 <- randomForest(model, data=envtrain)
 erf <- evaluate(testpres, testbackg, rf1)
 erf
 
+#class          : ModelEvaluation 
+#n presences    : 1217 
+#n absences     : 1240 
+#AUC            : 0.9282424 
+#cor            : 0.7516766 
+#max TPR+TNR at : 0.595694 
+
 #erf2 <- evaluate(testpres, testbackg, rf2)
 
 #getting the AUC plot over .9 represents a model with good predictive power
 plot(erf, 'ROC')
+
+
 
 pr <- predict(predictors, rf1, ext=ext)
 
@@ -128,7 +137,7 @@ points(backg_train_sp, pch='-', cex=1)
 
 getwd()
 setwd("E:/Project_23_Mushroom_git/Mushroom_Suitability_Research/Project_23_Mushroom/Data/PredictionData")
-writeRaster(pr,"predictCalvatiaGig.tif")
+writeRaster(pr,"predictCoprinusCom.tif",overwrite=T)
 
 
 
