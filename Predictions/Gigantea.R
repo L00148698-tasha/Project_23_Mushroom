@@ -17,17 +17,21 @@ predictors<-rast("predictors.tif")
 #sdmData <- sdmData[,-1]
 head(alldata)
 
+unique(alldata$species)
+
+#[1] "Calvatia gigantea"          "Craterellus cornucopioides" "Pleurotus ostreatus"        "Boletus edulis"            
+#[5] "Coprinus comatus"           "Calocybe gambosa"           "Craterellus tubaeformis"    "Cantharellus cibarius" 
 #split the species to bolet
 # Specify the desired species name
-target_species <- "Boletus edulis"
+target_species <- "Calvatia gigantea"
 
 # Create a new data frame with only the rows for the target species
-boletus_ed <- alldata[alldata$species == target_species, ]
+calvatia_gi <- alldata[alldata$species == target_species, ]
 
 #split the data
 
-present <- boletus_ed[boletus_ed$present == 1, ]
-absent<-boletus_ed[boletus_ed$present == 0, ]
+present <- calvatia_gi[calvatia_gi$present == 1, ]
+absent<-calvatia_gi[calvatia_gi$present == 0, ]
 
 nrow(present)
 nrow(absent)
@@ -88,20 +92,20 @@ model <- present ~ tavg + prec + bare + tree + grass + cropland + elev + wetland
 rf1 <- randomForest(model, data=envtrain)
 ## Warning in randomForest.default(m, y, ...): The response has five or fewer
 ## unique values. Are you sure you want to do regression?
-model2 <- factor(present) ~ tavg + prec + bare + tree + grass + cropland + elev + wetland
-rf2 <- randomForest(model2, data=envtrain)
+#model2 <- factor(present) ~ tavg + prec + bare + tree + grass + cropland + elev + wetland
+#rf2 <- randomForest(model2, data=envtrain)
 #rf3 <- randomForest(envtrain[,1:8], factor(pb_train))
 erf <- evaluate(testpres, testbackg, rf1)
 erf
 
-erf2 <- evaluate(testpres, testbackg, rf2)
+#erf2 <- evaluate(testpres, testbackg, rf2)
 
 #getting the AUC plot over .9 represents a model with good predictive power
 plot(erf, 'ROC')
 
 pr <- predict(predictors, rf1, ext=ext)
 
-pr2<- predict(predictors, rf2, ext=ext)
+#pr2<- predict(predictors, rf2, ext=ext)
 
 library(geodata)
 wrld <- world(path=".")
@@ -122,28 +126,12 @@ points(pres_train_sp, pch='+',col="blue")
 points(backg_train_sp, pch='-', cex=1)
 
 
-par(mfrow=c(1,2))
-plot(pr2, main='Random Forest, classification')
-plot(wrld, add=TRUE, border='dark grey')
-
 getwd()
 setwd("E:/Project_23_Mushroom_git/Mushroom_Suitability_Research/Project_23_Mushroom/Data/PredictionData")
-writeRaster(pr,"predictBolete.tif")
+writeRaster(pr,"predictCalvatiaGig.tif")
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#par(mfrow=c(1,2))
+#plot(pr2, main='Random Forest, classification')
+#plot(wrld, add=TRUE, border='dark grey')

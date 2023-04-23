@@ -18,7 +18,7 @@ setwd("E:/Project_23_Mushroom_git/Mushroom_Suitability_Research/Project_23_Mushr
 wetland<-rast("wetland.tif")
 
 setwd("E:/Project_23_Mushroom_git/Mushroom_Suitability_Research/Project_23_Mushroom/Data/Climate_Data/precipitation_avg")
-prec<-rast("wc2.1_30s_prec_01.tif")
+prec<-rast("wc2.1_30s_prec_09.tif")
 
 # change the extent
 #check the coordinate reference system
@@ -30,7 +30,7 @@ prec<-crop(prec,ext)
 plot(prec)
 
 setwd("E:/Project_23_Mushroom_git/Mushroom_Suitability_Research/Project_23_Mushroom/Data/Climate_Data/temperature_avg")
-tavg<-rast("wc2.1_30s_tavg_01.tif")
+tavg<-rast("wc2.1_30s_tavg_09.tif")
 tavg<-crop(tavg,ext)
 plot(tavg)
 
@@ -46,4 +46,4 @@ plot(predictors)
 
 getwd()
 setwd("E:/Project_23_Mushroom_git/Mushroom_Suitability_Research/Project_23_Mushroom/Data/Background_Data/")
-writeRaster(predictors,"predictors.tif")
+writeRaster(predictors,"predictors.tif", overwrite=T)
